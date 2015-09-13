@@ -3,7 +3,7 @@ sub init_config {
 	return if ( ! $config_file );
 	my $section = weechat::config_new_section ( $config_file, "config", 0, 0, "", "", "", "", "", "", "", "", "", "" );
 	$config{'buffers_blacklist'} = weechat::config_new_option ( $config_file, $section, "buffers_blacklist", "string", 
-	"buffers blacklist", "", 0, 0, "", "", 1, "", "", "load_vars_cb", "", "", "" );
+	"buffers where script do not work, separated by commas. e.g.: freenode.#debian, hispano.#linux", "", 0, 0, "", "", 1, "", "", "load_vars_cb", "", "", "" );
 	$config{'left_symbol'} = weechat::config_new_option ( $config_file, $section, "left_symbol", "string", 
 	"left_symbol", "", 0, 0, "[[ ", "[[ ", 1, "", "", "load_vars_cb", "", "", "" );
 	$config{'right_symbol'} = weechat::config_new_option ( $config_file, $section, "right_symbol", "string",
@@ -14,7 +14,6 @@ sub init_config {
 	"right_color, e.g.: 5,12 (5 for fg and 12 for bg), 5 (5 for fg, no bg). $color_codes", "", 0, 0, "5,12", "5,12", 1, "", "", "load_vars_cb", "", "", "" );
 	$config{'nick_color'} = weechat::config_new_option ( $config_file, $section, "nick_color", "string", 
 	"nick_color, e.g.: 5,12 (5 for fg and 12 for bg), 5 (5 for fg, no bg). $color_codes", "", 0, 0, "8,12", "8,12", 1, "", "", "load_vars_cb", "", "", "" );
-
 }
 
 sub my_config_reload_cb {
@@ -44,6 +43,8 @@ sub my_hook_command_run_cb {
 sub my_command_run_cb {
 	my $buffer = $_[1];
 	my $command_run = $_[2];
+	my $input_str = weechat::buffer_get_string( $buffer, "input" );
+	return if ( $input_str =~ /^\/.*/ );
 	weechat::command( $buffer, "$command_run" );
 	$buffer_input_str = weechat::buffer_get_string( $buffer, "input" );
 	my $last_word = (split m/\s+/, $buffer_input_str)[-1];
