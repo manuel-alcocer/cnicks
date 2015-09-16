@@ -1,4 +1,5 @@
 sub init_config {
+	$color_codes = "00 - white; 1 - black; 2 - blue; 3 - green; 4 - lightred; 5 - red; 6 - magenta; 7 - brown; 8 - yellow; 9 - lightgreen; 10 - cyan; 11 - lightcyan; 12 - lightblue; 13 - lightmagenta; 14 - darkgray; 15 - gray;";
 	$config_file = weechat::config_new ( "cnicks", "my_config_reload_cb", "" ); 
 	return if ( ! $config_file );
 	my $section = weechat::config_new_section ( $config_file, "config", 0, 0, "", "", "", "", "", "", "", "", "", "" );
@@ -90,7 +91,6 @@ sub word_is_nick {
 }
 
 sub my_command_run_return_cb {
-	$string_sent = "";
 	my $buffer = $_[1];
 	my $final_string = weechat::buffer_get_string( $buffer, "input" );
 	$string_sent = weechat::hook_modifier( "input_text_for_buffer", "my_modifier_cb", "" );
@@ -115,12 +115,8 @@ sub my_modifier_cb {
 	}
 	return ( "$string" );
 }
-	
-
 
 weechat::register ( "cnicks", "nashgul", "0.1", "gnu", "complete nicks with colors and symbols", "", "" );
-
-$color_codes = "00 - white; 1 - black; 2 - blue; 3 - green; 4 - lightred; 5 - red; 6 - magenta; 7 - brown; 8 - yellow; 9 - lightgreen; 10 - cyan; 11 - lightcyan; 12 - lightblue; 13 - lightmagenta; 14 - darkgray; 15 - gray;";
 
 init_config;
 config_read;
